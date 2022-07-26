@@ -1,36 +1,22 @@
 package homework;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-class CustomerTest {
+class CustomerTest
+{
 
     // Все тесты должны проходить, менять тесты не надо.
 
     @Test
-    @DisplayName("Проверяем, что класс Customer не сломан")
-    void setterCustomerTest() {
-        //given
-        String expectedName = "updatedName";
-        String name = "nameVas";
-        Customer customer = new Customer(1, name, 2);
-
-        //when
-        customer.setName(expectedName);
-
-        //then
-        assertThat(customer.getName()).isEqualTo(expectedName);
-    }
-
-    @Test
     @DisplayName("Объект Customer как ключ в карте")
-    void customerAsKeyTest() {
+    void customerAsKeyTest()
+    {
         //given
         final long customerId = 1L;
         Customer customer = new Customer(customerId, "Ivan", 233);
@@ -56,47 +42,9 @@ class CustomerTest {
     }
 
     @Test
-    @DisplayName("Сортировка по полю score, итерация по возрастанию")
-    void scoreSortingTest() {
-        //given
-        Customer customer1 = new Customer(1, "Ivan", 233);
-        Customer customer2 = new Customer(2, "Petr", 11);
-        Customer customer3 = new Customer(3, "Pavel", 888);
-
-        CustomerService customerService = new CustomerService();
-        customerService.add(customer1, "Data1");
-        customerService.add(customer2, "Data2");
-        customerService.add(customer3, "Data3");
-
-        //when
-        Map.Entry<Customer, String> smallestScore = customerService.getSmallest();
-        //then
-        assertThat(smallestScore.getKey()).isEqualTo(customer2);
-
-        //when
-        // подсказка:
-        // a key-value mapping associated with the least key strictly greater than the given key, or null if there is no such key.
-        Map.Entry<Customer, String> middleScore = customerService.getNext(new Customer(10, "Key", 20));
-        //then
-        assertThat(middleScore.getKey()).isEqualTo(customer1);
-        middleScore.getKey().setScores(10000);
-        middleScore.getKey().setName("Vasy");
-
-        //when
-        Map.Entry<Customer, String> biggestScore = customerService.getNext(customer1);
-        //then
-        assertThat(biggestScore.getKey()).isEqualTo(customer3);
-
-        //when
-        Map.Entry<Customer, String> notExists = customerService.getNext(new Customer(100, "Not exists", 20000));
-        //then
-        assertThat(notExists).isNull();
-
-    }
-
-    @Test
     @DisplayName("Модификация коллекции")
-    void mutationTest() {
+    void mutationTest()
+    {
         //given
         Customer customer1 = new Customer(1, "Ivan", 233);
         Customer customer2 = new Customer(2, "Petr", 11);
@@ -117,7 +65,8 @@ class CustomerTest {
 
     @Test
     @DisplayName("Возвращание в обратном порядке")
-    void reverseOrderTest() {
+    void reverseOrderTest()
+    {
         //given
         Customer customer1 = new Customer(1, "Ivan", 233);
         Customer customer2 = new Customer(3, "Petr", 11);
@@ -142,5 +91,62 @@ class CustomerTest {
         Customer customerFirst = customerReverseOrder.take();
         //then
         assertThat(customerFirst).usingRecursiveComparison().isEqualTo(customer1);
+    }
+
+    @Test
+    @DisplayName("Сортировка по полю score, итерация по возрастанию")
+    void scoreSortingTest()
+    {
+        //given
+        Customer customer1 = new Customer(1, "Ivan", 233);
+        Customer customer2 = new Customer(2, "Petr", 11);
+        Customer customer3 = new Customer(3, "Pavel", 888);
+
+        CustomerService customerService = new CustomerService();
+        customerService.add(customer1, "Data1");
+        customerService.add(customer2, "Data2");
+        customerService.add(customer3, "Data3");
+
+        //when
+        Map.Entry<Customer, String> smallestScore = customerService.getSmallest();
+        //then
+        assertThat(smallestScore.getKey()).isEqualTo(customer2);
+
+        //when
+        // подсказка:
+        // a key-value mapping associated with the least key strictly greater than the given key, or null if there is
+        // no such key.
+        Map.Entry<Customer, String> middleScore = customerService.getNext(new Customer(10, "Key", 20));
+        //then
+        assertThat(middleScore.getKey()).isEqualTo(customer1);
+        middleScore.getKey().setScores(10000);
+        middleScore.getKey().setName("Vasy");
+
+        //when
+        Map.Entry<Customer, String> biggestScore = customerService.getNext(customer1);
+        //then
+        assertThat(biggestScore.getKey()).isEqualTo(customer3);
+
+        //when
+        Map.Entry<Customer, String> notExists = customerService.getNext(new Customer(100, "Not exists", 20000));
+        //then
+        assertThat(notExists).isNull();
+
+    }
+
+    @Test
+    @DisplayName("Проверяем, что класс Customer не сломан")
+    void setterCustomerTest()
+    {
+        //given
+        String expectedName = "updatedName";
+        String name = "nameVas";
+        Customer customer = new Customer(1, name, 2);
+
+        //when
+        customer.setName(expectedName);
+
+        //then
+        assertThat(customer.getName()).isEqualTo(expectedName);
     }
 }
