@@ -20,35 +20,35 @@ public class TestRunner {
         method.invoke(instance);
     }
 
-    private final Class<?> testClass;
-    private final TestStatistics testsResult = new TestStatistics();
-    private final Set<Method> beforeMethods = new HashSet<>();
-    private final Set<Method> afterMethods = new HashSet<>();
-    private final Set<Method> testMethods = new HashSet<>();
+    private static Class<?> testClass;
+    private static TestStatistics testsResult = new TestStatistics();
+    private static final Set<Method> beforeMethods = new HashSet<>();
+    private static final Set<Method> afterMethods = new HashSet<>();
+    private static final Set<Method> testMethods = new HashSet<>();
 
-    public TestRunner(String className) throws ClassNotFoundException {
+    public static void checkMethodAnnotation(String className) throws ClassNotFoundException
+    {
         testClass = Class.forName(className);
         Method[] methods = testClass.getDeclaredMethods();
-
         for (Method method : methods) {
-            if (method.getAnnotation(Before.class) != null) {
+            if (method.isAnnotationPresent(Before.class)) {
                 beforeMethods.add(method);
             }
-            else if (method.getAnnotation(Test.class) != null) {
+            else if (method.isAnnotationPresent(Test.class)) {
                 testMethods.add(method);
             }
-            else if (method.getAnnotation(After.class) != null) {
+            else if (method.isAnnotationPresent(After.class)) {
                 afterMethods.add(method);
             }
         }
     }
 
-    public void run() throws NoSuchMethodException, InvocationTargetException,
-            InstantiationException, IllegalAccessException {
+    public static void run() {
         boolean withoutError = true;
         for (Method testMethod : testMethods) {
-            Object instance = testClass.getDeclaredConstructor().newInstance();
+            Object instance = null;
             try {
+                instance = testClass.getDeclaredConstructor().newInstance();
                 if (invokeMethods(beforeMethods, instance)) {
                     invokeMethod(testMethod, instance);
                 }
@@ -62,6 +62,10 @@ public class TestRunner {
                 }
                 testsResult.addError();
                 withoutError = false;
+            }
+            catch (InstantiationException | NoSuchMethodException e)
+            {
+                System.err.println(e.getMessage());
             }
             finally {
                 if (invokeMethods(afterMethods, instance) & withoutError) {

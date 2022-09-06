@@ -6,6 +6,7 @@ public class Main {
     public static void main(String[] args)
             throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException,
             IllegalAccessException {
-        new TestRunner(TempTest.class.getSimpleName()).run();
+        TestRunner.checkMethodAnnotation(TempTest.class.getSimpleName());
+        TestRunner.run();
     }
 }
