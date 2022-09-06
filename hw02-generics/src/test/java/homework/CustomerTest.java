@@ -8,15 +8,13 @@ import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class CustomerTest
-{
+class CustomerTest {
 
     // Все тесты должны проходить, менять тесты не надо.
 
     @Test
     @DisplayName("Объект Customer как ключ в карте")
-    void customerAsKeyTest()
-    {
+    void customerAsKeyTest() {
         //given
         final long customerId = 1L;
         Customer customer = new Customer(customerId, "Ivan", 233);
@@ -43,8 +41,7 @@ class CustomerTest
 
     @Test
     @DisplayName("Модификация коллекции")
-    void mutationTest()
-    {
+    void mutationTest() {
         //given
         Customer customer1 = new Customer(1, "Ivan", 233);
         Customer customer2 = new Customer(2, "Petr", 11);
@@ -65,8 +62,7 @@ class CustomerTest
 
     @Test
     @DisplayName("Возвращание в обратном порядке")
-    void reverseOrderTest()
-    {
+    void reverseOrderTest() {
         //given
         Customer customer1 = new Customer(1, "Ivan", 233);
         Customer customer2 = new Customer(3, "Petr", 11);
@@ -95,8 +91,7 @@ class CustomerTest
 
     @Test
     @DisplayName("Сортировка по полю score, итерация по возрастанию")
-    void scoreSortingTest()
-    {
+    void scoreSortingTest() {
         //given
         Customer customer1 = new Customer(1, "Ivan", 233);
         Customer customer2 = new Customer(2, "Petr", 11);
@@ -136,8 +131,7 @@ class CustomerTest
 
     @Test
     @DisplayName("Проверяем, что класс Customer не сломан")
-    void setterCustomerTest()
-    {
+    void setterCustomerTest() {
         //given
         String expectedName = "updatedName";
         String name = "nameVas";

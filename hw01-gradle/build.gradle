@@ -3,6 +3,8 @@ plugins {
     id 'com.github.johnrengelman.shadow'
 }
 
+group 'ru.otus'
+
 dependencies {
     implementation 'com.google.guava:guava'
 }
