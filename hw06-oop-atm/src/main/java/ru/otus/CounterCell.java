@@ -11,18 +11,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 9/22/22
  */
 public class CounterCell {
+    private static int getSum(List<Banknote> listBanknotes) {
+        return listBanknotes.stream().mapToInt(e -> e.nominal().getValue()).sum();
+    }
     private final List<Banknote> banknotes = new ArrayList<>();
-
     private final AtomicInteger sum;
 
     public CounterCell(List<Banknote> banknotes) {
         this.banknotes.addAll(banknotes);
         sum = new AtomicInteger(getSum(banknotes));
-    }
-
-    public boolean addBanknote(Banknote banknote) {
-        sum.addAndGet(banknote.nominal().getValue());
-        return banknotes.add(banknote);
     }
 
     public boolean addBanknotes(List<Banknote> banknotes) {
@@ -32,10 +29,6 @@ public class CounterCell {
 
     public int getAmount() {
         return sum.get();
-    }
-
-    private static int getSum(List<Banknote> listBanknotes) {
-        return listBanknotes.stream().mapToInt(e -> e.nominal().getValue()).sum();
     }
 
     public Banknote getBanknote() {

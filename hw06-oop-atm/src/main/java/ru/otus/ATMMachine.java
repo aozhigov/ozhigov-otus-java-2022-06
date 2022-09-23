@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
  * @since 9/22/22
  */
 public class ATMMachine {
-    private final Map<Nominal, CounterCell> moneyStore = new EnumMap<>(Nominal.class);
+    private final Map<Nominal, CounterCell> counterCells = new EnumMap<>(Nominal.class);
     private final AtomicInteger balance;
 
     public ATMMachine(List<Banknote> initialBanknotes) {
@@ -24,11 +24,11 @@ public class ATMMachine {
         balance = new AtomicInteger(getBalance());
     }
 
-    public void cashIn(List<Banknote> banknotes) {
+    public void banknoteIn(List<Banknote> banknotes) {
         addBanknotes(banknotes);
     }
 
-    public List<Banknote> cashOut(int amount) throws Exception {
+    public List<Banknote> banknoteOut(int amount) throws Exception {
         int amountCommon = getBalance();
         if (amountCommon < amount) {
             throw new Exception("Недостаточно средств");
@@ -36,38 +36,35 @@ public class ATMMachine {
 
         balance.addAndGet(-amount);
         return split(amount).stream()
-                .map(it -> moneyStore.get(Nominal.of(it)).getBanknote())
+                .map(it -> counterCells.get(Nominal.of(it)).getBanknote())
                 .collect(Collectors.toList());
     }
 
-    private int getBalance() {
-        return moneyStore.values().stream()
-                .mapToInt(CounterCell::getAmount)
-                .sum();
-    }
-
-    public int getBalanceValue()
-    {
+    public int getBalanceValue() {
         return balance.get();
     }
 
     private void addBanknotes(List<Banknote> initialBanknotes) {
-        Map<Nominal, List<Banknote>> byNominal = initialBanknotes.stream()
-                .collect(Collectors.groupingBy(Banknote::nominal));
-
-        byNominal.forEach((nominal, banknotes) -> {
-            moneyStore.compute(nominal, (k, cell) -> {
-                if (cell == null) {
-                    return new CounterCell(banknotes);
-                } else {
-                    cell.addBanknotes(banknotes);
-                    return cell;
-                }
-            });
-        });
+        initialBanknotes.stream()
+                .collect(Collectors.groupingBy(Banknote::nominal))
+                .forEach((nominal, banknotes) -> counterCells.compute(nominal, (k, cell) -> {
+                    if (cell == null) {
+                        return new CounterCell(banknotes);
+                    }
+                    else {
+                        cell.addBanknotes(banknotes);
+                        return cell;
+                    }
+                }));
     }
 
-    private List<Integer> split(int amount) {
+    private int getBalance() {
+        return counterCells.values().stream()
+                .mapToInt(CounterCell::getAmount)
+                .sum();
+    }
+
+    private static List<Integer> split(int amount) {
         Integer[] notes = Arrays.stream(Nominal.values())
                 .map(Nominal::getValue)
                 .sorted(Collections.reverseOrder())

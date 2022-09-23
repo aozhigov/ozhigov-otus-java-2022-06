@@ -28,6 +28,7 @@ public enum Nominal {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Нет подходящего номинала: " + value));
     }
+
     private final int value;
 
     Nominal(int value) {

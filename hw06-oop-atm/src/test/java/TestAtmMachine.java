@@ -20,7 +20,7 @@ public class TestAtmMachine {
 
     @Test
     void cashIn() {
-        atmMachine.cashIn(List.of(new Banknote(Nominal.of(2000)),
+        atmMachine.banknoteIn(List.of(new Banknote(Nominal.of(2000)),
                         new Banknote(Nominal.of(1000)),
                         new Banknote(Nominal.of(2000)),
                         new Banknote(Nominal.of(5000))));
@@ -30,7 +30,7 @@ public class TestAtmMachine {
 
     @Test
     void cashOut() throws Exception {
-        List<Banknote> banknotes = atmMachine.cashOut(1050);
+        List<Banknote> banknotes = atmMachine.banknoteOut(1050);
         assert banknotes.size() == 2;
 
         assert atmMachine.getBalanceValue() == 5100;
@@ -38,7 +38,7 @@ public class TestAtmMachine {
 
     @Test
     void notEnoughMoney() {
-        assertThatThrownBy(() -> atmMachine.cashOut(100500))
+        assertThatThrownBy(() -> atmMachine.banknoteOut(100500))
                 .isInstanceOf(Exception.class)
                 .hasMessage("Недостаточно средств");
     }
