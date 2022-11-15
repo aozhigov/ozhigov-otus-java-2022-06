@@ -14,7 +14,7 @@ import ru.otus.processor.Processor;
  */
 public class ProcessorExceptionEveryEvenSeconds implements Processor {
 
-    private static class ThrowExceptionEveryEvenSeconds extends RuntimeException {
+    public static class ThrowExceptionEveryEvenSeconds extends RuntimeException {
         public ThrowExceptionEveryEvenSeconds(int currentSecond) {
             super("Current second is: " + currentSecond);
         }
@@ -22,7 +22,7 @@ public class ProcessorExceptionEveryEvenSeconds implements Processor {
 
     private final Clock clock;
 
-    private ProcessorExceptionEveryEvenSeconds(Clock clock) {
+    public ProcessorExceptionEveryEvenSeconds(Clock clock) {
         this.clock = clock;
     }
 
