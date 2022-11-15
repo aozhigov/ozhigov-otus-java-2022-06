@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ru.otus.ATMMachine;
+import ru.otus.ATMMachineImpl;
 import ru.otus.Banknote;
 import ru.otus.Nominal;
 
@@ -24,16 +25,14 @@ public class TestAtmMachine {
                         new Banknote(Nominal.of(1000)),
                         new Banknote(Nominal.of(2000)),
                         new Banknote(Nominal.of(5000))));
-
-        assert atmMachine.getBalanceValue() == 6150;
+        assert atmMachine.getBalance() == 16150;
     }
 
     @Test
     void cashOut() throws Exception {
         List<Banknote> banknotes = atmMachine.cashOut(1050);
         assert banknotes.size() == 2;
-
-        assert atmMachine.getBalanceValue() == 5100;
+        assert atmMachine.getBalance() == 5100;
     }
 
     @Test
@@ -45,7 +44,7 @@ public class TestAtmMachine {
 
     @BeforeEach
     void setUp() {
-        atmMachine = new ATMMachine(
+        atmMachine = new ATMMachineImpl(
                 List.of(
                         new Banknote(Nominal.of(1000)),
                         new Banknote(Nominal.of(50)),

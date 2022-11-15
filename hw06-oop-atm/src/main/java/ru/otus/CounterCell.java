@@ -11,41 +11,37 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 9/22/22
  */
 public class CounterCell {
-    private final List<Banknote> banknotes = new ArrayList<>();
+    private final Nominal currentNominal;
 
-    private final AtomicInteger sum;
+    private final AtomicInteger count;
 
-    public CounterCell(List<Banknote> banknotes) {
-        this.banknotes.addAll(banknotes);
-        sum = new AtomicInteger(getSum(banknotes));
+    public CounterCell(Nominal nominal, List<Banknote> banknotes) {
+        this.currentNominal = nominal;
+        count = new AtomicInteger(banknotes.size());
     }
 
-    public boolean addBanknote(Banknote banknote) {
-        sum.addAndGet(banknote.nominal().getValue());
-        return banknotes.add(banknote);
+    public void addBanknote(Banknote banknote) {
+        assert banknote.nominal().getValue() == currentNominal.getValue();
+        count.addAndGet(1);
     }
 
-    public boolean addBanknotes(List<Banknote> banknotes) {
-        sum.addAndGet(getSum(banknotes));
-        return this.banknotes.addAll(banknotes);
+    public void addBanknotes(List<Banknote> banknotes) {
+        banknotes.forEach(this::addBanknote);
     }
 
-    public int getAmount() {
-        return sum.get();
-    }
-
-    private static int getSum(List<Banknote> listBanknotes) {
-        return listBanknotes.stream().mapToInt(e -> e.nominal().getValue()).sum();
+    public int getCount() {
+        return count.get();
     }
 
     public Banknote getBanknote() {
-        if (banknotes.isEmpty()) {
+        if (count.get() == 0) {
             throw new RuntimeException("Недостаточно денег в ячейке");
         }
-        int idx = banknotes.size() - 1;
-        Banknote banknote = banknotes.get(idx);
-        banknotes.remove(banknote);
-        sum.addAndGet(-banknote.nominal().getValue());
-        return banknote;
+        count.addAndGet(-1);
+        return new Banknote(currentNominal);
+    }
+
+    public Nominal getCurrentNominal() {
+        return currentNominal;
     }
 }
